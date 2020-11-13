@@ -1,4 +1,4 @@
 # MRZ_codes
 
-run on linux \n
-place mrz.traineddata to usr/share/tesseract-ocr/tessdata
+<p>run on linux
+<p>place mrz.traineddata to usr/share/tesseract-ocr/tessdata
