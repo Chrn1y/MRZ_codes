@@ -1,11 +1,13 @@
-from flask import Flask
+from flask import Flask, request
+from mrq_area import get_mrz_from_b64_bytes
 
 app = Flask(__name__)
 
 
-@app.route("/image")
+@app.route("/")
 def image():
-    return 0
+    img64 = request.get_json()["image"]
+    get_mrz_from_b64_bytes(img64)
 
 
 if __name__ == '__main__':
