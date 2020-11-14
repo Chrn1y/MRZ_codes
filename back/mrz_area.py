@@ -29,5 +29,5 @@ def get_mrz_area(image):
             break
 
     #cv2.imshow('mrz_code', mrz)
-    cv2.waitKey(0)
+    #cv2.waitKey(0)
     return mrz

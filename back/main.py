@@ -1,8 +1,13 @@
 from flask import Flask, request
-from combiner import get_mrz_from_b64_bytes, test_mrz
+from combiner import test_mrz
+from PIL import Image
+from io import BytesIO
+import base64
+import cv2
+import numpy
+
 
 app = Flask(__name__)
-
 
 @app.route("/")
 def index():
@@ -11,9 +16,14 @@ def index():
 
 @app.route("/image", methods=['POST'])
 def image():
-    img64 = request.get_json()["image"]
-    print(img64)
-    # get_mrz_from_b64_bytes(img64)
+    image_str = request.get_json()['image']
+    image_orig = base64.b64decode(image_str)
+    image_np = numpy.frombuffer(image_orig, dtype=numpy.uint8)
+    image_cv2 = cv2.imdecode(image_np, flags=1)
+    cv2.imshow('img', image_cv2)
+    cv2.waitKey(0)
+    print(image_cv2.shape)
+    print(test_mrz(image_cv2))
     return '1337'
 
 
