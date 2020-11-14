@@ -1,0 +1,15 @@
+certifi==2020.6.20
+click==7.1.2
+Flask==1.1.2
+imageio==2.9.0
+itsdangerous==1.1.0
+Jinja2==2.11.2
+MarkupSafe==1.1.1
+mrz==0.6.2
+numpy==1.19.4
+opencv-python==4.4.0.46
+Pillow==8.0.1
+pytesseract==0.3.6
+tesseract==0.1.3
+Werkzeug==1.0.1
+wincertstore==0.2
