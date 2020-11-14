@@ -10,9 +10,9 @@ import cv2
 import datetime
 import numpy as np
 
-from setup import PATH_TO_tesseract
+from setup import PATH_TO_TESSERACT
 
-pytesseract.pytesseract.tesseract_cmd = PATH_TO_tesseract
+pytesseract.pytesseract.tesseract_cmd = PATH_TO_TESSERACT
 
 
 def decode_td1(mrz_code):
@@ -92,7 +92,7 @@ def get_mrz_from_image(image):
     return images mrz code
     return type - string
     '''
-    return pytesseract.image_to_string(image, lang="mrz")
+    return pytesseract.image_to_string(image, lang="mrz").replace(' ', '').strip()
 
 
 def get_mrz_data(image):
@@ -101,7 +101,7 @@ def get_mrz_data(image):
     return type - dict
     return None if decoding is impossible
     '''
-    mrz_code = get_mrz_from_image(image).replace(' ', '').strip()
+    mrz_code = get_mrz_from_image(image)
     decoded_data = decode_mrz(mrz_code)
     if decoded_data is None:
         return None
