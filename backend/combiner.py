@@ -10,7 +10,13 @@ def get_json_mrz(image):
     mrz_area = get_mrz_area(image)
     if mrz_area is None:
         return None
+    # cv2.imshow("area", mrz_area)
+    # cv2.waitKey(0)
     data_json = get_json_mrz_data(mrz_area)
     if data_json is None:
         return None
     return data_json
+
+
+def test_mrz():
+    return get_json_mrz(cv2.imread("./working_test.jpg"))

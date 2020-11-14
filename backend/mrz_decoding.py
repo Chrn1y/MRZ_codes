@@ -88,13 +88,13 @@ def convert_data(data):
     return data
 
 
-def get_mrz_from_image(image):
-    return pytesseract.image_to_string(image, lang="mrz")[:-2]
+def get_mrz_from_image(image) :
+  return pytesseract.image_to_string(image, lang="mrz")
 
 
 def get_json_mrz_data(image):
-    mrz_code = get_mrz_from_image(image)
-    decoded_data = decode_mrz(mrz_code)
-    if decoded_data is None:
-        return None
-    return json.dumps(convert_data(decoded_data))
+  mrz_code = get_mrz_from_image(image).replace(' ', '').strip()
+  decoded_data = decode_mrz(mrz_code)
+  if decoded_data is None:
+    return None
+  return json.dumps(convert_data(decoded_data))
