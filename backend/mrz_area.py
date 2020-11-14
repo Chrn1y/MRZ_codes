@@ -3,14 +3,14 @@ import cv2
 
 def get_mrz_area(image):
     '''
-      Intput value - ndarray of (width, height, channels)
-      Output value - ndarray of (width, height, channels) or None
-      Function founds area of mrz code on the picture and returns it as image or
-      None if rmz area was not found
+        Intput value - ndarray of (width, height, channels)
+        Output value - ndarray of (width, height, channels) or None
+        Function founds area of mrz code on the picture and returns it as image or
+        None if rmz area was not found
 
-      Warning:
-      for appropriate results input picture should be orientated horizontally
-    '''
+        Warning:
+        for appropriate results input picture should be orientated horizontally
+      '''
     outputWidth = 800
 
     ratio = outputWidth / image.shape[0]
@@ -20,15 +20,15 @@ def get_mrz_area(image):
     blackWhite = cv2.GaussianBlur(blackWhite, (3, 3), 0)
 
     blacked = cv2.morphologyEx(blackWhite, cv2.MORPH_BLACKHAT,
-                               cv2.getStructuringElement(0, (15, 10)))
+                               cv2.getStructuringElement(0, (13, 6)))
 
     closed = cv2.morphologyEx(blacked, cv2.MORPH_CLOSE,
-                              cv2.getStructuringElement(0, (30, 55)))
+                              cv2.getStructuringElement(0, (30, 49)))
 
     otsu = cv2.threshold(closed, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
 
     squared = cv2.morphologyEx(otsu, cv2.MORPH_CLOSE,
-                               cv2.getStructuringElement(0, (5, 5)))
+                               cv2.getStructuringElement(0, (6, 6)))
 
     eroded = cv2.erode(squared, cv2.getStructuringElement(0, (6, 6)), 3)
 
@@ -41,14 +41,13 @@ def get_mrz_area(image):
         (x, y, w, h) = cv2.boundingRect(c)
         localWidth = w / float(h)
         globalWidth = w / float(resized.shape[1])
-
-        if localWidth > 7 and globalWidth > 0.6:
-            epsX = int((x + w) * 0.03)
-            epsY = int((y + h) * 0.03)
-            x -= epsX
-            y -= epsY
-            w += 2 * epsX
-            h += 2 * epsY
+        if localWidth > 4 and globalWidth > 0.5:
+            epsX = int((x + w) * 0.025)
+            epsY = int((y + h) * 0.025)
+            x = max(0, x - epsX)
+            y = max(0, y - epsY)
+            w = w + 2 * epsX
+            h = h + 2 * epsY
             mrz = resized[y:y + h, x:x + w].copy()
             break
 
