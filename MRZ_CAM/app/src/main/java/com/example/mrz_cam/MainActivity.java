@@ -3,7 +3,6 @@ package com.example.mrz_cam;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,10 +10,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,7 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
@@ -33,7 +32,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 
@@ -130,8 +128,10 @@ public class MainActivity extends AppCompatActivity {
         try {
 
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentUri);
-            Bitmap bitmap2 = Bitmap.createScaledBitmap(bitmap, 720, 960, true);
+            Bitmap bitmap2 = Bitmap.createScaledBitmap(bitmap, 960, 720, true);
             request(bitmap2);
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -142,6 +142,12 @@ public class MainActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
         return bos.toByteArray();
     }
+
+    void setResponce(String responceString){
+        TextView text = findViewById(R.id.testtext);
+        text.setText(responceString);
+    }
+
     void request(Bitmap imageBitmap){
         try {
 
@@ -151,21 +157,102 @@ public class MainActivity extends AppCompatActivity {
                 inputLine = Base64.getEncoder().encodeToString(curImage);
             }
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String URL = "https://e62d8d217067.ngrok.io/image";
+            String URL = "https://e62d8d217067.ngrok.io";
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("image", inputLine);
             //jsonBody.put("Author", "BNK");
             final String requestBody = jsonBody.toString();
 
+            JsonObjectRequest myRequest = new JsonObjectRequest(Request.Method.POST,
+                    URL, null,
+                    new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            /*
+                            Toast toast = Toast.makeText(getApplicationContext(),"YESYES", Toast.LENGTH_SHORT);
+                            toast.show();
+                            JSONObject jsonObject = response;
+                            int here = jsonObject.length();
+                            String cock = "";
+                            cock+=here;
+                            setResponce(cock);
+                            //Toast toast = Toast.makeText(getApplicationContext(),cock, Toast.LENGTH_SHORT);
+                            //toast.show();
+                            */
+                            setResponce(response.toString());
+                        }
+                    }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                   /*
+                    Log.e("VOLLEY", error.toString());
+                    int a = error.networkResponse.statusCode;
+                    if(a!=200) {
+                        String clear = "";
+                        clear += a;
+                        //setResponce(clear);
+                    }
+                     */
+                }
+
+            })
+            {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody(){
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+
+            };
+
+            myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    20000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            requestQueue.add(myRequest);
+            /*
             StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        int here = jsonObject.length();
+                        String cock = "";
+                        cock+=here;
+                        setResponce(cock);
+                        Toast toast = Toast.makeText(getApplicationContext(),cock, Toast.LENGTH_SHORT);
+                        toast.show();
+
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     Log.i("VOLLEY", response);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    /*
                     Log.e("VOLLEY", error.toString());
+                    int a = error.networkResponse.statusCode;
+                    if(a!=200) {
+                        String clear = "";
+                        clear += a;
+                        //setResponce(clear);
+                    }
+
                 }
             }) {
                 @Override
@@ -183,18 +270,19 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
+
                 @Override
                 protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                    String responseString = "";
                     if (response != null) {
                         responseString = String.valueOf(response.statusCode);
+                        // setResponce(responseString);
                         // can get more details such as response.headers
                     }
                     return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
                 }
-            };
+            };*/
 
-            requestQueue.add(stringRequest);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

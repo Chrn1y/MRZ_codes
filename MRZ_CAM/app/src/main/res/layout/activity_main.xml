@@ -6,10 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/img"
-        tools:ignore="ContentDescription" />
+        android:id = "@+id/testtext"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
