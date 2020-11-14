@@ -1,7 +1,7 @@
 import cv2
 from google.colab.patches import cv2_imshow
 
-def getMrqArea(image): 
+def getMrzArea(image): 
   '''
     Intput value - ndarray of (width, height, channels)
     Output value - ndarray of (width, height, channels) or None
@@ -26,7 +26,7 @@ def getMrqArea(image):
                              cv2.getStructuringElement(0, (13, 6)))
 
   closed = cv2.morphologyEx(blacked, cv2.MORPH_CLOSE,
-                            cv2.getStructuringElement(0, (30,45)))
+                            cv2.getStructuringElement(0, (30,49)))
 
   otsu = cv2.threshold(closed, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
 
