@@ -1,7 +1,7 @@
 import cv2
 
 
-def get_mrq_area(image):
+def get_mrz_area(image):
     blackWhite = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blackWhite = cv2.GaussianBlur(blackWhite, (3, 3), 0)
     blacked = cv2.morphologyEx(blackWhite, cv2.MORPH_BLACKHAT, cv2.getStructuringElement(0, (14, 6)))
@@ -25,7 +25,9 @@ def get_mrq_area(image):
             y -= epsY
             w += 2 * epsX
             h += 2 * epsY
-            rmz = image[y:y + h, x:x + w].copy()
+            mrz = image[y:y + h, x:x + w].copy()
             break
 
-    return rmz
+    #cv2.imshow('mrz_code', mrz)
+    cv2.waitKey(0)
+    return mrz

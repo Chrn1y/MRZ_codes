@@ -1,9 +1,9 @@
 import pytesseract
 from mrz.checker.td3 import TD3CodeChecker, get_country
 import json
+from setup import PATH_TO_tesseract
 
-# my personal path to tisseract, must be changed for other devices
-pytesseract.pytesseract.tesseract_cmd = r'C:\Users\artyo\AppData\Local\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = PATH_TO_tesseract
 
 
 def convert_to_date(string):
