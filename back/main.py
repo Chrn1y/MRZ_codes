@@ -1,5 +1,5 @@
 from flask import Flask, request
-from mrq_area import get_mrz_from_b64_bytes
+from combiner import get_mrz_from_b64_bytes
 
 app = Flask(__name__)
 

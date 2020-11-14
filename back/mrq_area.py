@@ -1,18 +1,7 @@
 import cv2
-from numpy import array
-import base64
-import io
-from imageio import imread
 
 
-def get_mrz_from_b64_bytes(data):
-    b64_bytes = base64.b64encode(data)
-    b64_string = b64_bytes.decode()
-    img = imread(io.BytesIO(base64.b64decode(b64_string)))
-    getMrqArea(img)
-
-
-def getMrqArea(image):
+def get_mrq_area(image):
     blackWhite = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blackWhite = cv2.GaussianBlur(blackWhite, (3, 3), 0)
     blacked = cv2.morphologyEx(blackWhite, cv2.MORPH_BLACKHAT, cv2.getStructuringElement(0, (14, 6)))
