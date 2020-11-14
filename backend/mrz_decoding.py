@@ -1,5 +1,4 @@
 import pytesseract
-from mrz.checker.td3 import TD3CodeChecker, get_country
 from mrz.checker.td1 import TD1CodeChecker as checker1
 from mrz.checker.td2 import TD2CodeChecker as checker2
 from mrz.checker.td3 import TD3CodeChecker as checker3
@@ -68,7 +67,6 @@ def decode_mrz(mrz_code):
         try:
             decoded_data = decoder(mrz_code)
         except:
-            # Я не нашел у ошибок mrz общего предка чтобы ловить
             pass
 
     return decoded_data
