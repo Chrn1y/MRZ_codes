@@ -15,9 +15,11 @@ Original file is located at
 # place mrz.traineddata to usr/share/tesseract-ocr/tessdata
 
 import mrz.base.errors as mrz_errors
+import datetime
 import pytesseract
 import cv2
 import json
+import numpy as np
 
 pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
 
@@ -95,10 +97,83 @@ def convert_data(data):
   return data
 
 def get_mrz_from_image(image) :
-  return pytesseract.image_to_string(image, lang="mrz")[:-2]
+  '''
+  return images mrz code
+  return type - string
+  '''
+  return pytesseract.image_to_string(image, lang="mrz")
 
-def get_json_mrz_data(image):
-  mrz_code = get_mrz_from_image(image)
-  return json.dumps(convert_data(decode_mrz(mrz_code)))
+def get_mrz_data(image):
+  '''
+  return decoded_mrz_data
+  return type - dict
+  return None if decoding is impossible
+  '''
+  mrz_code = get_mrz_from_image(image).replace(' ', '').strip()
+  decoded_data = decode_mrz(mrz_code)
+  if decoded_data is None:
+    return None
+  decoded_data['mrz_code'] = mrz_code
+  return convert_data(decoded_data)
 
-get_json_mrz_data(cv2.imread("sample2.jpg"))
+def get_blacked(image):
+  '''
+  return blacked image
+  return type - 3d list
+  '''
+  bw = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+  rectker = cv2.getStructuringElement(0, (15, 10))
+  return cv2.morphologyEx(bw, cv2.MORPH_BLACKHAT, rectker)
+
+def make_contrast(image, alpha):
+  '''
+  return contrast image
+  return type - 3d list
+  '''
+  return cv2.convertScaleAbs(image, alpha=alpha)
+
+def make_erode(image):
+  '''
+  return eroded image
+  return type - 3d list
+  '''
+  return cv2.erode(image, cv2.getStructuringElement(0,(2, 2)), 2)
+
+def get_image_variants(image):
+  '''
+  return different variants of image transformation
+  return type - list of images - 4d array
+  '''
+  blacked = get_blacked(image)
+  eroded_image = make_erode(image)
+  eroded_blacked = make_erode(blacked)
+
+  variants = [blacked, eroded_image, eroded_blacked]
+  for alpha in np.arange(1, 3.1, 0.5):
+    image_contrast = make_contrast(image, alpha=alpha)
+    blacked_contract = make_contrast(blacked, alpha)
+    # eroded_image_contrast = make_erode(image_contrast)
+    # eroded_image_contrast
+    eroded_blacked_contract = make_erode(image_contrast)
+
+    variants.extend([image_contrast, blacked_contract, eroded_blacked_contract])
+  return variants
+
+def mrz_transcript(image):
+  '''
+  tries to decode image and its different variation
+  return json decoded data
+  return None if decoding is impossible
+  '''
+  try:
+    variants = get_image_variants(image)
+    for variant in variants:
+      data = get_mrz_data(variant)
+      if data is not None:
+        return json.dumps(data)
+  except:
+    pass
+  return None
+
+mrz_transcript(cv2.imread("andMrz.jpg"))
+
