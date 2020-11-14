@@ -39,7 +39,7 @@ def to_json(fields):
 
 
 def get_mrz_data(image):
-  mrz = pytesseract.image_to_string(image, lang="mrz")[:-2]
+  mrz_code = pytesseract.image_to_string(image, lang="mrz")[:-2]
   td3_check = TD3CodeChecker(mrz_code)
   fields = td3_check.fields()
 
