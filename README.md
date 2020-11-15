@@ -101,15 +101,17 @@ Example of response:
 }
 ```
 
-## <a href="android-app"> Android app </a>
+## <a name="android-app"> Android app </a>
 
-### <a href="installation"> Installation </a>
+### <a name="installation"> Installation </a>
 
-Install `mrz_cam.apk` and give it all permissions it asks
+Install `mrz_cam.apk` and give it all the permissions it asks
 
-### <a href="how-to-use"> How to use </a>
+### <a name="how-to-use"> How to use </a>
 
-When you are ready, press `Начать сканирование` and take a picture horisontaly, like it is shown below:
+If you have just opened the app, you will be asked for your ngrok.io key. This key is needed to connect the app with the server and it is a temporary solution.
+
+When you are ready, press `Начать сканирование` and take a picture horizontally, like it is shown below:
 
 ![image-20201115041325464](https://sun9-57.userapi.com/DZouBNMEfIC7jvmK4C8efXseSEYNtxrz7BQ_Fw/-KvS2O2zMyg.jpg)
 
@@ -121,7 +123,7 @@ There could be several different responses:
 * `Сервер не отвечает или введен невалидный ключ` – in this case you should check validness of your http/ngrok key or viability of the server
 * Correct data – enjoy
 
-## <a href="mrz-area-detection-module"> MRZ area detection module </a>
+## <a name="mrz-area-detection-module"> MRZ area detection module </a>
 
 This module detects the machine readable code in the picture of a document and extracts it as an image. In order to get proper results, the input image should be orientated.
 
@@ -149,17 +151,17 @@ After applying these transformations we get a black/white picture where all clos
 
 On the next stage we use OpenCV function getCounters to get all counters that it is possible to find. Found counters are sorted in ascending order, so that we can find which one stands for RMZ. As RMZ is usually a long and narrow rectangle, we analyze these features and choose the most suitable one.
 
-Example of found area (red):
+Example of the found area (red):
 
 ![image-20201115040010337](https://sun9-50.userapi.com/44cG0_gmsG9q0FQg8EK0tT6jZT_L-4PiWnHoXQ/mponB8T54SE.jpg)
 
-Example of output:
+Example of an output:
 
 ![image-20201115040038305](https://sun9-73.userapi.com/jaSr1SusdYWLWP5I-nP4MYCbj6GMHNfnI1gwcg/uPULGrFygcM.jpg)
 
 
 
-## <a href="mrz-recognition-module"> MRZ recognition module </a>
+## <a name="mrz-recognition-module"> MRZ recognition module </a>
 
 This module extracts MRZ code from the MRZ area image and transforms it to JSON format. Transformation algorithm depends on the document type. Supported formats are Td1, Td2, Td3, international passport, MRVA  and MRVB.
 
