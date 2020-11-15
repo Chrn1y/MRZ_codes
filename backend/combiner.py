@@ -1,6 +1,7 @@
 from mrz_area import get_mrz_area
 from mrz_decoding import mrz_transcript
 
+
 # call functions one by one
 # get image return json or None
 def get_json_mrz(image):
