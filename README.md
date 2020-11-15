@@ -4,7 +4,7 @@ This project provides both algorithm and UI for [MRZ](https://en.wikipedia.org/w
 
 * [Backend](#backend)
   * [Getting started](#getting-started)
-  * [Run](###Run)
+  * [Run](#run)
 * [API Reference](#api-reference)
 * [Android app](#android-app)
   * [Installation](#installation)
