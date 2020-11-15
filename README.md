@@ -2,15 +2,15 @@
 
 This project provides both algorithm and UI for [MRZ](https://en.wikipedia.org/wiki/Machine-readable_passport) code extraction. You may use only API or just take a picture in the android mobile phone app and it will be sent to the server where the main algorithm extracts and deciphers MRZ code.
 
-* [Backend](##Backend)
-  * [Getting started](###Getting started)
+* [Backend](#Backend)
+  * [Getting started](#Getting started)
   * [Run](###Run)
-* [API Reference](##API Reference)
-* [Android app](##Android app)
-  * [Installation](###Installation)
-  * [How to use](###How to use)
-* [MRZ area detection module](##MRZ area detection module)
-* [MRZ recognition module](##MRZ recognition module)
+* [API Reference](#API Reference)
+* [Android app](#Android app)
+  * [Installation](#Installation)
+  * [How to use](#How to use)
+* [MRZ area detection module](#MRZ area detection module)
+* [MRZ recognition module](#MRZ recognition module)
 
 ## Backend
 
