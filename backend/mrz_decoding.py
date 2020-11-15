@@ -144,7 +144,7 @@ def get_image_variants(image):
     eroded_image = make_erode(image)
     eroded_blacked = make_erode(blacked)
 
-    variants = [blacked, eroded_image, eroded_blacked]
+    variants = [image, blacked, eroded_image, eroded_blacked]
     for alpha in np.arange(1, 3.1, 0.5):
         image_contrast = make_contrast(image, alpha=alpha)
         blacked_contract = make_contrast(blacked, alpha)
