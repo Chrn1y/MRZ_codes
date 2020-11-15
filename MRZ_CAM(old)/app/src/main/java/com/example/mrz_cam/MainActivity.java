@@ -3,23 +3,13 @@ package com.example.mrz_cam;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,28 +23,17 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.NameList;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.jar.Attributes;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,93 +44,10 @@ public class MainActivity extends AppCompatActivity {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        setResponce("Вас приветствует приложение MRZ_SCAN. Сканирование следует выполнять горизонтально, в случае неудачи рекомендуется повторить сканирование");
-        checkFirstStart();
 
-    }
-
-    public void OnClick(View view) {
         dispatchTakePictureIntent();
     }
 
-    private void checkFirstStart() {
-
-        SharedPreferences sp = getSharedPreferences("hasVisited",
-                Context.MODE_PRIVATE);
-        // проверяем, первый ли раз открывается программа (Если вход первый то вернет false)
-        boolean hasVisited = sp.getBoolean("hasVisited", false);
-
-        if (!hasVisited) {
-            // Сработает если Вход первый
-            saveTextBuffer("");
-
-            //Ставим метку что вход уже был
-            SharedPreferences.Editor e = sp.edit();
-            e.putBoolean("hasVisited", true);
-            e.apply(); //После этого hasVisited будет уже true и будет означать, что вход уже был
-
-            //Ниже запускаем активность которая нужна при первом входе
-
-        } else {
-            String current = GetText();
-            EditText ed = findViewById(R.id.editText);
-            ed.setText(current);
-            //Сработает если вход в приложение уже был
-            //Ниже запускаем активность которая нужна при последующих входах
-        }
-    }
-
-    private final static String FILE_NAME = "content.txt";
-
-    public void saveTextBuffer(String obmen) {
-        FileOutputStream fos = null;
-        try {
-
-            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-            fos.write(obmen.getBytes());
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                if (fos != null)
-                    fos.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    public String GetText() {
-
-        FileInputStream fin = null;
-        try {
-            fin = openFileInput(FILE_NAME);
-            byte[] bytes = new byte[fin.available()];
-            fin.read(bytes);
-            String text = new String(bytes);
-            return text;
-        } catch (IOException ex) {
-
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
-            String err = "error";
-            return err;
-        } finally {
-
-            try {
-                if (fin != null)
-                    fin.close();
-            } catch (IOException ex) {
-
-                Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
-                String err = "error";
-                return err;
-
-            }
-        }
-    }
-
-
-    String URL = "http://800940a6f913.ngrok.io";
     static final int REQUEST_IMAGE_CAPTURE = 1;
     /*
     private void dispatchTakePictureIntent() {
@@ -163,12 +59,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     */
-
-    String getCurrentHttps() {
-        EditText ed = findViewById(R.id.editText);
-        saveTextBuffer(ed.getText().toString());
-        return ed.getText().toString();
-    }
 
 
     String currentPhotoPath;
@@ -229,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
             galleryAddPic();
         }
     }
-
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(currentPhotoPath);
@@ -254,60 +143,12 @@ public class MainActivity extends AppCompatActivity {
         return bos.toByteArray();
     }
 
-    void setResponce(String responceString) {
+    void setResponce(String responceString){
         TextView text = findViewById(R.id.testtext);
-        //text.setText(responceString);
-
-        EditText editText = findViewById(R.id.editText);
-        //editText.setVisibility(View.GONE);
-
-        Button bt = findViewById(R.id.button);
-        //editText.setVisibility(View.GONE);
-
-        List<String> li = new ArrayList<>();
-        ListView lv = findViewById(R.id.listview);
-        li.add(responceString);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, li) {
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-
-                TextView textView = (TextView) view.findViewById(android.R.id.text1);
-
-                /*YOUR CHOICE OF COLOR*/
-                textView.setTextColor(Color.BLACK);
-                textView.setTextSize(20);
-
-                return view;
-            }
-        };
-        lv.setAdapter(adapter);
+        text.setText(responceString);
     }
 
-    void setMas(List<String> st) {
-        ListView lv = findViewById(R.id.listview);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, st) {
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-
-                TextView textView = (TextView) view.findViewById(android.R.id.text1);
-
-                /*YOUR CHOICE OF COLOR*/
-                textView.setTextColor(Color.BLACK);
-                textView.setTextSize(20);
-
-                return view;
-            }
-        };
-        lv.setAdapter(adapter);
-    }
-
-    void request(Bitmap imageBitmap) {
+    void request(Bitmap imageBitmap){
         try {
 
             byte[] curImage = getByteArrayfromBitmap(imageBitmap);
@@ -316,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 inputLine = Base64.getEncoder().encodeToString(curImage);
             }
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            URL = "http://" + getCurrentHttps() + ".ngrok.io";
+            String URL = "https://e62d8d217067.ngrok.io";
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("image", inputLine);
             //jsonBody.put("Author", "BNK");
@@ -339,56 +180,32 @@ public class MainActivity extends AppCompatActivity {
                             //Toast toast = Toast.makeText(getApplicationContext(),cock, Toast.LENGTH_SHORT);
                             //toast.show();
                             */
-                            //setResponce(response.toString());
-                            //JSONArray r = response.getJSONArray();
-
-
-                            List<String> li = new ArrayList<>();
-                            for (int i = 0; i < response.names().length(); i++) {
-                                String cur = "";
-                                try {
-                                    cur += response.names().getString(i);
-                                    //cur+=" ";
-                                    String db = "";
-                                    db += response.getString(cur);
-                                    cur += ": ";
-                                    cur += db;
-                                    li.add(cur);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-                            setMas(li);
+                            setResponce(response.toString());
                         }
-
-
                     }, new Response.ErrorListener() {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                   /*
                     Log.e("VOLLEY", error.toString());
                     int a = error.networkResponse.statusCode;
-                    if (a == 418) {
-                        String clear = "Приложение не обнаружило MRZ, рекомендуем повторить сканирование горизонтально";
-                        setResponce(clear);
+                    if(a!=200) {
+                        String clear = "";
+                        clear += a;
+                        //setResponce(clear);
                     }
-                    if (a != 200 && a != 418) {
-                        String clear = "Сервер не отвечает или введен невалидный ключ";
-                        setResponce(clear);
-                    }
-
+                     */
                 }
 
-            }) {
+            })
+            {
                 @Override
                 public String getBodyContentType() {
                     return "application/json; charset=utf-8";
                 }
 
                 @Override
-                public byte[] getBody() {
+                public byte[] getBody(){
                     try {
                         return requestBody == null ? null : requestBody.getBytes("utf-8");
                     } catch (UnsupportedEncodingException uee) {
