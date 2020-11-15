@@ -91,11 +91,11 @@ Example of response:
     "sex": "F", 
     "document_type": "VD", 
     "document_number": "047286890", 
-    "optional_data": "TH<<1028", 
+    "optional_data": "TM<<1028", 
     "birth_date_hash": "9", 
     "expiry_date_hash": "9", 
     "document_number_hash": "6", 
-  	"mrz_code": "VDD<<VOROPAEVA<<ALEKSANDRA<<<<<<<<<<\n0472868906RUS9105089F1410309TH<<1028"
+  	"mrz_code": "VDD<<VOROPAEVA<<ALEKSANDRA<<<<<<<<<<\n0472868906RUS9105089F1410309TM<<1028"
 }
 ```
 
