@@ -2,19 +2,21 @@
 
 This project provides both algorithm and UI for [MRZ](https://en.wikipedia.org/wiki/Machine-readable_passport) code extraction. You may use only API or just take a picture in the android mobile phone app and it will be sent to the server where the main algorithm extracts and deciphers MRZ code.
 
-* [Backend](##Backend)
-  * [Getting started](###Getting started)
+* [Backend](#backend)
+  * [Getting started](#getting-started)
   * [Run](###Run)
-* [API Reference](##API Reference)
-* [Android app](##Android app)
-  * [Installation](###Installation)
-  * [How to use](###How to use)
-* [MRZ area detection module](##MRZ area detection module)
-* [MRZ recognition module](##MRZ recognition module)
+* [API Reference](#api-reference)
+* [Android app](#android-app)
+  * [Installation](#installation)
+  * [How to use](#how-to-use)
+* [MRZ area detection module](#mrz-area-detection-module)
+  * [Description](#description1)
+* [MRZ recognition module](#mrz-recognition-module)
+  * [Description](#description2)
 
-## Backend
+## <a name="backend"> Backend </a>
 
-### Getting started
+### <a name="getting-started"> Getting started </a>
 
 First of all, install virtualenv:
 
@@ -53,7 +55,7 @@ PATH_TO_TESSERACT = r'C:\Users\artyo\AppData\Local\Tesseract-OCR\tesseract.exe'
 
 Also put mrz.traineddata file in trainedata folder which is located in the same folder as tesseract_cmd on your machine
 
-### Run
+### <a name="run"> Run </a>
 
 Run ngrok locally to publish 8000 port with http
 
@@ -74,7 +76,7 @@ source mrz_env/bin/activate
 python3 ./main.py
 ```
 
-## API Reference
+## <a name="api-reference"> API Reference </a>
 
 We have only one function that receives POST request with base64 encoded image in JSON field "image" (`content-type = application/json`) and returns JSON with decoded MRZ (`content-type = application/json`)
 
@@ -99,13 +101,13 @@ Example of response:
 }
 ```
 
-## Android app
+## <a href="android-app"> Android app </a>
 
-### Installation
+### <a href="installation"> Installation </a>
 
 Install `mrz_cam.apk` and give it all permissions it asks
 
-### How to use
+### <a href="how-to-use"> How to use </a>
 
 When you are ready, press `Начать сканирование` and take a picture horisontaly, like it is shown below:
 
@@ -119,21 +121,21 @@ There could be several different responses:
 * `Сервер не отвечает или введен невалидный ключ` – in this case you should check validness of your http/ngrok key or viability of the server
 * Correct data – enjoy
 
-## MRZ area detection module
+## <a href="mrz-area-detection-module"> MRZ area detection module </a>
 
 This module detects the machine readable code in the picture of a document and extracts it as an image. In order to get proper results, the input image should be orientated.
 
 
 
-​		**Input value:** ndarray of shape (height, weight, channels)
-
-​		**Output value:** ndarray of shape (height, weight, channels) or None (if area was not found)
+		**Input value:** ndarray of shape (height, weight, channels)
+	
+		**Output value:** ndarray of shape (height, weight, channels) or None (if area was not found)
 
 
 
 Note: this module requires [OpenCV](https://opencv.org/) library for python
 
-#### Description
+#### <a name="description1"> Description </a>
 
 Algorithm is based on OpenCV morphological transformations. The following transformations were used:
 
@@ -157,18 +159,18 @@ Example of output:
 
 
 
-## MRZ recognition module
+## <a href="mrz-recognition-module"> MRZ recognition module </a>
 
 This module extracts MRZ code from the MRZ area image and transforms it to JSON format. Transformation algorithm depends on the document type. Supported formats are Td1, Td2, Td3, international passport, MRVA  and MRVB.
 
 
 
-​		**Input value:** ndarray of shape (height, weight, channels)
-​		**Output value:** JSON dictionary or None (if algorithm did not manage to transcript the image)
+		**Input value:** ndarray of shape (height, weight, channels)
+		**Output value:** JSON dictionary or None (if algorithm did not manage to transcript the image)
 
 
 
-#### Description
+#### <a name="description2"> Description </a>
 
 This algorithm is based on Google Tesseract image text recognition, OpenCV morphological transformations and mrz decoding algorithm implemented by this [Github user](https://github.com/Arg0s1080/mrz).
 
